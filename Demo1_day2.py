@@ -19,6 +19,10 @@
 # 標記 cv2.IMREAD_GRAYSCALE = 0
 # 標記 cv2.IMREAD_COLOR = 1
 # 標記 cv2.IMREAD_UNCHANGED = 2
+#(1)cv2.IMREAD_COLOR :
+# #此為預設值，這種格式會讀取 RGB 三個 channels 的彩色圖片，而忽略透明度的 channel。
+# (2)cv2.IMREAD_GRAYSCALE  :以灰階的格式來讀取圖片。
+# (3) cv2.IMREAD_UNCHANGED : 讀取圖片中所有的 channels，包含透明度的 channel。
 
 # import cv2
 # # make a directory images
@@ -145,39 +149,46 @@
 #
 # #----R, G, B image 個別show-法1----
 # plt.figure(figsize=[20,9])
-# plt.subplot(131)
+# plt.subplot(131) # row 1, column 3 : 第1張 image
 # plt.title('Blue channel')
 # plt.imshow(image1[:,:,0])
-# plt.subplot(132)
+# plt.subplot(132)    # row 1, column 3 : 第2張 image
 # plt.title("Green channel")
 # plt.imshow(image1[:,:,1])
-# plt.subplot(133)
+# plt.subplot(133)    # row 1, column 3 : 第3張 image
 # plt.title("Red channel")
 # plt.imshow(image1[:,:,2])
 # plt.show()
 #
 # #----R, G, B image 個別show--法2---
-# b, g, r = cv2.split(image1)
+## b, g, r = cv2.split(image1)
+# result = cv2.split(image1)
 # plt.figure(figsize=[20, 9])
 # plt.subplot(131)
 # plt.title('Blue channel')
-# plt.imshow(b)
+## plt.imshow(b)
+#plt.imshow(result[0])
 # plt.subplot(132)
 # plt.title("Green channel")
-# plt.imshow(g)
+## plt.imshow(g)
+#plt.imshow(result[1])
 # plt.subplot(133)
 # plt.title("Red channel")
-# plt.imshow(r)
+## plt.imshow(r)
+# plt.imshow(result[2])
 # plt.show()
 
 #live template ------------------------
-
 import cv2
 import matplotlib.pyplot as plt
 
 IMAGE1 = 'images/bg1.jpg'
 orgImage =cv2.imread(IMAGE1, -1)
+cv2.imshow("Original Image",orgImage) # cv2.imshow 自己會轉成正常的
 plt.imshow(orgImage[: ,: ,::-1])
 plt.title("Original Image")
 plt.show()
+# 按下任意鍵則關閉所有視窗
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
