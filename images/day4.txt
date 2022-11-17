@@ -1,0 +1,772 @@
+open anaconda prompt
+(base)
+
+conda  create -n openvino2021_py37 python=3.7
+conda activate openvino2021_py37
+
+(openvino_2021_py37)
+cd C:\Intel\openvino_2021\bin
+setupvars.bat
+
+set path
+set python
+
+
+cd c:\Intel\openvino_2021\deployment_tools\model_optimizer\install_prerequisites
+install_prerequisites.bat
+pip install protobuf
+
+cd c:\Intel\openvino_2021\deployment_tools\demo
+demo_squeezenet_download_convert_run.bat
+
+
+demo_security_barrier_camera.bat
+
+C:\Users\Admin\Documents\Intel\OpenVINO\openvino_models\ir\public
+
+cmake missing:
+~~~~~
+C:\Program Files\CMake\bin
+
+all missing:
+
+C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\ProgramData\Oracle\Java\javapath;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;%SYSTEMROOT%\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Git\cmd;C:\Program Files\CMake\bin;C:\Program Files\dotnet\;C:\opencv\build\install\x64\vc16\bin;
+
+
+https://pytorch.org/get-started/locally/
+
+conda install pytorch torchvision torchaudio cpuonly -c pytorch
+
+
+import cv2
+
+# for first camera, select 0
+capture = cv2.VideoCapture(1)
+counter = 0
+IMAGE_NAME = 'image/%d.jpg'
+
+while True:
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    elif cv2.waitKey(1) & 0xFF == ord('s'):
+        cv2.imwrite(IMAGE_NAME % counter, frame)
+        counter += 1
+capture.release()
+cv2.destroyAllWindows()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import cv2
+
+# for first camera, select 0
+capture = cv2.VideoCapture(1)
+counter = 0
+IMAGE_NAME = 'image/%d.jpg'
+
+while True:
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    elif cv2.waitKey(1) & 0xFF == ord('s'):
+        cv2.imwrite(IMAGE_NAME % counter, gray)
+        counter += 1
+capture.release()
+cv2.destroyAllWindows()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import cv2
+
+# for first camera, select 0
+capture = cv2.VideoCapture(1)
+counter = 0
+IMAGE_NAME = 'image/%d.jpg'
+
+while True:
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    intputKey = cv2.waitKey(1)
+    if intputKey & 0xFF == ord('q'):
+        break
+    elif intputKey & 0xFF == ord('s'):
+        filename = IMAGE_NAME % counter
+        cv2.imwrite(filename, gray)
+        print(f"file {filename} saved")
+        counter += 1
+capture.release()
+cv2.destroyAllWindows()
+
+
+demo12_webcam_2_category.py
+
+import cv2
+
+# for first camera, select 0
+capture = cv2.VideoCapture(1)
+p_counter = 0
+n_counter = 0
+POSITIVE_NAME = 'image/positive/%d.jpg'
+NEGATIVE_NAME = 'image/negative/%d.jpg'
+
+while True:
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    inputKey = cv2.waitKey(1)
+    if inputKey & 0xFF == ord('q'):
+        break
+    elif inputKey & 0xFF == ord('p'):
+        filename = POSITIVE_NAME % p_counter
+        cv2.imwrite(filename, gray)
+        print(f"positive file {filename} saved")
+        p_counter += 1
+    elif inputKey & 0xFF == ord('n'):
+        filename = NEGATIVE_NAME % n_counter
+        cv2.imwrite(filename, gray)
+        print(f"negative file {filename} saved")
+        n_counter += 1
+capture.release()
+cv2.destroyAllWindows()
+
+
+demo13_dataset
+
+import glob
+import os
+import subprocess
+import uuid
+import PIL.Image
+import cv2
+import torch.utils.data
+
+
+class ImageClassificationDataSet(torch.utils.data.Dataset):
+    def __init__(self, directory, categories, transform=None):
+        self.categories = categories
+        self.directory = directory
+        self.transform = transform
+        self._refresh()
+
+    def __len__(self):
+        pass
+
+    def __getitem__(self, item):
+        pass
+
+    def get_count(self, categorty):
+        pass
+
+    def _refresh(self):
+        pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import glob
+import os
+import subprocess
+import uuid
+import PIL.Image
+import cv2
+import torch.utils.data
+
+
+class ImageClassificationDataSet(torch.utils.data.Dataset):
+    def __init__(self, directory, categories, transform=None):
+        self.categories = categories
+        self.directory = directory
+        self.transform = transform
+        self._refresh()
+
+    def __len__(self):
+        pass
+
+    def __getitem__(self, item):
+        pass
+
+    def get_count(self, categorty):
+        pass
+
+    def _refresh(self):
+        print("get actual data")
+        self.annotations = []
+        for category in self.categories:
+            category_index = self.categories.index(category)
+            for image_path in glob.glob(os.path.join(self.directory, category, '*.jpg')):
+                self.annotations += [{
+                    'image_path': image_path,
+                    'category_index': category_index,
+                    'category': category
+                }]
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import glob
+import os
+import subprocess
+import uuid
+import PIL.Image
+import cv2
+import torch.utils.data
+
+
+class ImageClassificationDataSet(torch.utils.data.Dataset):
+    def __init__(self, directory, categories, transform=None):
+        self.categories = categories
+        self.directory = directory
+        self.transform = transform
+        self._refresh()
+
+    def __len__(self):
+        return len(self.annotations)
+
+    def __getitem__(self, index):
+        ann = self.annotations[index]
+        image = cv2.imread(ann['image_path'], cv2.IMREAD_COLOR)
+        image = PIL.Image.fromarray(image)
+        if self.transform is not None:
+            image = self.transform(image)
+        return image, ann['category_index']
+
+    def get_count(self, category):
+        i = 0
+        for a in self.annotations:
+            if a['category'] == category:
+                i += 1
+        return i
+
+    def _refresh(self):
+        print("get actual data")
+        self.annotations = []
+        for category in self.categories:
+            category_index = self.categories.index(category)
+            for image_path in glob.glob(os.path.join(self.directory, category, '*.jpg')):
+                self.annotations += [{
+                    'image_path': image_path,
+                    'category_index': category_index,
+                    'category': category
+                }]
+
+
+demo14_pytorch_retrain_model
+
+
+https://pytorch.org/docs/stable/torchvision/transforms.html
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torchvision.transforms as transforms
+from demo13_dataset import ImageClassificationDataSet
+import torchvision
+import torch
+import torch.nn.functional as F
+
+TASK = 'image'
+CATEGORIES = ['positive', 'negative']
+DATASETS = ['image']
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+datasets = {}
+for name in DATASETS:
+    datasets[name] = ImageClassificationDataSet(name, CATEGORIES, TRANSFORMS)
+dataset = datasets[DATASETS[0]]
+print(f"{TASK} task with {CATEGORIES} categories defined")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torchvision.transforms as transforms
+from demo13_dataset import ImageClassificationDataSet
+import torchvision
+import torch
+import torch.nn.functional as F
+
+TASK = 'image'
+CATEGORIES = ['positive', 'negative']
+DATASETS = ['image']
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+datasets = {}
+for name in DATASETS:
+    datasets[name] = ImageClassificationDataSet(name, CATEGORIES, TRANSFORMS)
+dataset = datasets[DATASETS[0]]
+print(f"{TASK} task with {CATEGORIES} categories defined")
+dataset._refresh()
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
+device = torch.device('cpu')
+model = torchvision.models.resnet18(pretrained=True)
+model.fc = torch.nn.Linear(512, len(dataset.categories))
+model = model.to(device)
+model.train()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torchvision.transforms as transforms
+from demo13_dataset import ImageClassificationDataSet
+import torchvision
+import torch
+import torch.nn.functional as F
+
+TASK = 'image'
+CATEGORIES = ['positive', 'negative']
+DATASETS = ['image']
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+datasets = {}
+for name in DATASETS:
+    datasets[name] = ImageClassificationDataSet(name, CATEGORIES, TRANSFORMS)
+dataset = datasets[DATASETS[0]]
+print(f"{TASK} task with {CATEGORIES} categories defined")
+dataset._refresh()
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
+device = torch.device('cpu')
+model = torchvision.models.resnet18(pretrained=True)
+model.fc = torch.nn.Linear(512, len(dataset.categories))
+model = model.to(device)
+model.train()
+print(model)
+epochs = 10
+optimizer = torch.optim.Adam(model.parameters())
+while epochs > 0:
+    i = 0
+    sum_loss = 0.0
+    error_count = 0.0
+    for images, labels in iter(train_loader):
+        images = images.to(device)
+        labels = labels.to(device)
+        optimizer.zero_grad()
+        outputs = model(images)
+        loss = F.cross_entropy(outputs, labels)
+        loss.backward()
+        optimizer.step()
+        error_count += len(torch.nonzero(outputs.argmax(1) - labels, as_tuple=False).flatten())
+        count = len(labels.flatten())
+        i += count
+        sum_loss += float(loss)
+    print("[{}],loss={},accuracy={}".format(epochs, sum_loss / i, 1.0 - error_count / i))
+    epochs = epochs - 1
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torchvision.transforms as transforms
+from demo13_dataset import ImageClassificationDataSet
+import torchvision
+import torch
+import torch.nn.functional as F
+
+TASK = 'image'
+CATEGORIES = ['positive', 'negative']
+DATASETS = ['image']
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+datasets = {}
+for name in DATASETS:
+    datasets[name] = ImageClassificationDataSet(name, CATEGORIES, TRANSFORMS)
+dataset = datasets[DATASETS[0]]
+print(f"{TASK} task with {CATEGORIES} categories defined")
+dataset._refresh()
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
+device = torch.device('cpu')
+model = torchvision.models.resnet18(pretrained=True)
+model.fc = torch.nn.Linear(512, len(dataset.categories))
+model = model.to(device)
+model.train()
+print(model)
+epochs = 10
+optimizer = torch.optim.Adam(model.parameters())
+while epochs > 0:
+    i = 0
+    sum_loss = 0.0
+    error_count = 0.0
+    for img, lbl in iter(train_loader):
+        img = img.to(device)
+        lbl = lbl.to(device)
+        optimizer.zero_grad()
+        outputs = model(img)
+        loss = F.cross_entropy(outputs, lbl)
+        print(f"loss={loss}")
+        loss.backward()
+        optimizer.step()
+        error_count += len(torch.nonzero(outputs.argmax(1) - lbl, as_tuple=False).flatten())
+        count = len(lbl.flatten())
+        i += count
+        sum_loss += float(loss)
+    print("[{}],loss={},accuracy={}".format(epochs, sum_loss, 1.0 - error_count / i))
+    epochs = epochs - 1
+MODEL_WEIGHT = 'model/weight_only'
+WHOLE_MODEL = 'model/model_and_weight'
+torch.save(model.state_dict(), MODEL_WEIGHT)
+torch.save(model,WHOLE_MODEL)
+
+
+demo15_load_model_live_preview
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+import cv2
+import torchvision.transforms as transforms
+import torchvision
+import torch
+import PIL
+
+MODEL_WEIGHT = 'model/weight_only'
+# for first camera, use 0
+cap = cv2.VideoCapture(1)
+
+device = torch.device('cpu')
+model1 = torchvision.models.resnet18()
+model1 = model1.to(device)
+model1.fc = torch.nn.Linear(512, 2)
+model1.load_state_dict(torch.load(MODEL_WEIGHT))
+
+while True:
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    inputKey = cv2.waitKey(1) & 0xFF
+    if inputKey == ord('q'):
+        break
+    elif inputKey == ord('v'):
+        print("call pytorch")
+
+cap.release()
+cv2.destroyAllWindows()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import cv2
+import torchvision.transforms as transforms
+import torchvision
+import torch
+import PIL
+
+MODEL_WEIGHT = 'model/weight_only'
+# for first camera, use 0
+cap = cv2.VideoCapture(1)
+
+device = torch.device('cpu')
+model1 = torchvision.models.resnet18()
+model1 = model1.to(device)
+model1.fc = torch.nn.Linear(512, 2)
+model1.load_state_dict(torch.load(MODEL_WEIGHT))
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+
+def verify(f):
+    image = f.to(device)
+    image = torch.reshape(image, [1, 3, 224, 224])
+    output = model1(image)
+    if output.argmax(1) == 1:
+        print('down')
+    else:
+        print("up")
+
+
+while True:
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    inputKey = cv2.waitKey(1) & 0xFF
+    if inputKey == ord('q'):
+        break
+    elif inputKey == ord('v'):
+        print("call pytorch")
+        frame = PIL.Image.fromarray(frame)
+        frame = TRANSFORMS(frame)
+        verify(frame)
+
+cap.release()
+cv2.destroyAllWindows()
+image ==> image_bw
+mkdir image
+mkdir positive
+mkdir negative
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+demo12" 
+
+import cv2
+
+# for first camera, select 0
+capture = cv2.VideoCapture(1)
+p_counter = 0
+n_counter = 0
+POSITIVE_NAME = 'image/positive/%d.jpg'
+NEGATIVE_NAME = 'image/negative/%d.jpg'
+
+while True:
+    ret, frame = capture.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.imshow('frame', gray)
+    inputKey = cv2.waitKey(1)
+    if inputKey & 0xFF == ord('q'):
+        break
+    elif inputKey & 0xFF == ord('p'):
+        filename = POSITIVE_NAME % p_counter
+        cv2.imwrite(filename, frame)
+        print(f"positive file {filename} saved")
+        p_counter += 1
+    elif inputKey & 0xFF == ord('n'):
+        filename = NEGATIVE_NAME % n_counter
+        cv2.imwrite(filename, frame)
+        print(f"negative file {filename} saved")
+        n_counter += 1
+capture.release()
+cv2.destroyAllWindows()
+image ==> val_image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torchvision.transforms as transforms
+from demo13_dataset import ImageClassificationDataSet
+import torchvision
+import torch
+import torch.nn.functional as F
+
+TASK = 'image'
+CATEGORIES = ['positive', 'negative']
+DATASETS = ['image']
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+datasets = {}
+for name in DATASETS:
+    datasets[name] = ImageClassificationDataSet(name, CATEGORIES, TRANSFORMS)
+dataset = datasets[DATASETS[0]]
+print(f"{TASK} task with {CATEGORIES} categories defined")
+dataset._refresh()
+train_loader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
+device = torch.device('cpu')
+model = torchvision.models.resnet18(pretrained=True)
+model.fc = torch.nn.Linear(512, len(dataset.categories))
+model = model.to(device)
+model.train()
+print(model)
+epochs = 10
+optimizer = torch.optim.Adam(model.parameters())
+while epochs > 0:
+    i = 0
+    sum_loss = 0.0
+    error_count = 0.0
+    for img, lbl in iter(train_loader):
+        img = img.to(device)
+        lbl = lbl.to(device)
+        optimizer.zero_grad()
+        outputs = model(img)
+        loss = F.cross_entropy(outputs, lbl)
+        print(f"loss={loss}")
+        loss.backward()
+        optimizer.step()
+        error_count += len(torch.nonzero(outputs.argmax(1) - lbl, as_tuple=False).flatten())
+        count = len(lbl.flatten())
+        i += count
+        sum_loss += float(loss)
+    print("[{}],loss={},accuracy={}".format(epochs, sum_loss, 1.0 - error_count / i))
+    epochs = epochs - 1
+MODEL_WEIGHT = 'model/weight_only'
+WHOLE_MODEL = 'model/model_and_weight'
+torch.save(model.state_dict(), MODEL_WEIGHT)
+torch.save(model, WHOLE_MODEL)
+
+val_dataset = ImageClassificationDataSet("val_image", CATEGORIES, TRANSFORMS)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=1)
+
+i = 0
+error_count = 0
+
+for image, label in iter(val_loader):
+    image = image.to(device)
+    label = label.to(device)
+    output = model(image)
+    print(f"label={label}, guess={output.argmax(1)}")
+    error_count += len(torch.nonzero(output.argmax(1) - label).flatten())
+    count = len(label.flatten())
+    i += count
+print("error_count=", error_count)
+print("tota=", i)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import cv2
+import torchvision.transforms as transforms
+import torchvision
+import torch
+import PIL
+
+MODEL_WEIGHT = 'model/weight_only'
+# for first camera, use 0
+cap = cv2.VideoCapture(1)
+
+device = torch.device('cpu')
+model1 = torchvision.models.resnet18()
+model1 = model1.to(device)
+model1.fc = torch.nn.Linear(512, 2)
+model1.load_state_dict(torch.load(MODEL_WEIGHT))
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+
+def verify(f):
+    global status
+    image = f.to(device)
+    image = torch.reshape(image, [1, 3, 224, 224])
+    output = model1(image)
+    if output.argmax(1) == 1:
+        status = 'down'
+        print('down')
+    else:
+        status = 'up'
+        print("up")
+
+
+status = '------'
+while True:
+    ret, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    cv2.putText(gray, 'gesture=%s' % status, (50, 50), cv2.FONT_HERSHEY_SIMPLEX,
+                2, (0, 0, 0), thickness=2)
+    cv2.imshow('frame', gray)
+    inputKey = cv2.waitKey(1) & 0xFF
+    if inputKey == ord('q'):
+        break
+    elif inputKey == ord('v'):
+        # print("call pytorch")
+        frame = PIL.Image.fromarray(frame)
+        frame = TRANSFORMS(frame)
+        verify(frame)
+
+cap.release()
+cv2.destroyAllWindows()
+
+
+https://pytorch.org/docs/stable/generated/torch.nn.Softmax.html
+
+
+demo16_compare_model
+
+import torch
+import torchvision
+from torchvision import transforms
+from demo13_dataset import ImageClassificationDataSet
+
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+MODEL_WEIGHT = 'model/weight_only'
+WHOLE_MODEL = 'model/model_and_weight'
+
+device = torch.device('cpu')
+model1 = torchvision.models.resnet18()
+model1 = model1.to(device)
+model1.fc = torch.nn.Linear(512, 2)
+model1.load_state_dict(torch.load(MODEL_WEIGHT))
+
+model2 = torch.load(WHOLE_MODEL)
+print("---")
+
+
+def compare_models(m1, m2):
+    models_differ = 0
+    for key_item1, key_item2 in zip(m1.state_dict().items(), m2.state_dict().items()):
+        if torch.equal(key_item1[1], key_item2[1]):
+            pass
+        else:
+            models_differ += 1
+            if key_item1[0] == key_item2[0]:
+                print("mismatch found at:{}".format(key_item1[0]))
+            else:
+                raise Exception
+    if models_differ == 0:
+        print("model match perfectly")
+
+
+compare_models(model1, model2)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import torch
+import torchvision
+from torchvision import transforms
+from demo13_dataset import ImageClassificationDataSet
+
+TRANSFORMS = transforms.Compose([
+    transforms.ColorJitter(0.2, 0.2, 0.2, 0.2),
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
+
+MODEL_WEIGHT = 'model/weight_only'
+WHOLE_MODEL = 'model/model_and_weight'
+
+device = torch.device('cpu')
+model1 = torchvision.models.resnet18()
+model1 = model1.to(device)
+model1.fc = torch.nn.Linear(512, 2)
+model1.load_state_dict(torch.load(MODEL_WEIGHT))
+
+model2 = torch.load(WHOLE_MODEL)
+print("---")
+
+
+def compare_models(m1, m2):
+    models_differ = 0
+    for key_item1, key_item2 in zip(m1.state_dict().items(), m2.state_dict().items()):
+        if torch.equal(key_item1[1], key_item2[1]):
+            pass
+        else:
+            models_differ += 1
+            if key_item1[0] == key_item2[0]:
+                print("mismatch found at:{}".format(key_item1[0]))
+            else:
+                raise Exception
+    if models_differ == 0:
+        print("model match perfectly")
+
+
+compare_models(model1, model2)
+FILE1 = 'model/model1.txt'
+FILE2 = 'model/model2.txt'
+with open(FILE1, 'w') as file1:
+    file1.write(str(model1))
+with open(FILE2, 'w') as file2:
+    file2.write(str(model2))
+
+demo17
+
+copy barcode_sample to images\
+
+~~~~~~~~~~~
+import cv2
+import os
+import matplotlib.pyplot as plt
+
+print(os.getcwd())
+BARCODE_FILE1 = 'images/barcode_sample.jpg'
+image = cv2.imread(BARCODE_FILE1)
+data, bbox, image = cv2.QRCodeDetector().detectAndDecode(image)
+print(type(data))
+print(type(bbox))
+print(type(image))
